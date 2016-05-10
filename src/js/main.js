@@ -133,7 +133,7 @@ var Game = {
 		this.$timer.html(elapsedSeconds);
 		this.currentScore = elapsedSeconds;
 
-		switch (elapsedSeconds % 5) {
+		switch (elapsedSeconds % 2) {
 			case 0:
 				if (this.hasJustUpdatedLevel) {
 					break;
@@ -147,4 +147,20 @@ var Game = {
 	}
 };
 
+var Menu = {
+	init: function() {
+		var $allDifficultyButtons = $(".difficulties .difficulty");
+
+		$allDifficultyButtons.click(function(e) {
+			$allDifficultyButtons.removeClass("active");
+			$allDifficultyButtons.filter(e.target).addClass("active");
+
+			Game.$square
+				.removeClass("hard impossible")
+				.addClass(e.target.dataset.difficulty);
+		});
+	}
+};
+
+Menu.init();
 Game.changeState(STATE.OVER);

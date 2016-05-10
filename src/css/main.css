@@ -26,12 +26,18 @@ h1 {
 	text-align: center;
 	color: #fff;
 	margin: 30px 0 100px;
+	font-size: 32px;
 }
+
+.square-container,
 #square {
 	height: 200px;
 	width: 200px;
 	margin: 0 auto;
 	z-index: 10;
+}
+.square-container {
+	margin-bottom: 100px;
 }
 #square.over {
 	position: static;
@@ -40,6 +46,56 @@ h1 {
 #square.playing {
 	position: absolute;
 }
+
+.difficulties {
+	text-align: center;
+	color: #fff;
+	font-size: 20px;
+}
+.difficulties .title {
+	margin: 0 0 25px;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+.difficulties .difficulty {
+	width: 250px;
+	text-transform: uppercase;
+	letter-spacing: 4px;
+	color: #aaa;
+	padding: 5px 0 3px;
+	margin: 0 auto 10px;
+	cursor: pointer;
+	border: 2px solid transparent;
+	border-radius: 10px;
+	transition:
+		color 120ms linear,
+		border 120ms linear,
+		background 120ms linear;
+}
+.difficulties .difficulty:hover,
+.difficulties .difficulty.active {
+	color: #fff;
+}
+.difficulties .difficulty.standard:hover {
+	border-color: #389c5b;
+}
+.difficulties .difficulty.hard:hover {
+	border-color: #9c5b38;
+}
+.difficulties .difficulty.impossible:hover {
+	border-color: #9c385b;
+}
+.difficulties .difficulty.standard.active {
+	background: #389c5b;
+}
+.difficulties .difficulty.hard.active {
+	background: #9c5b38;
+}
+.difficulties .difficulty.impossible.active {
+	background: #9c385b;
+}
+
 .timer {
 	position: absolute;
 	top: 60px;
@@ -55,13 +111,12 @@ h1 {
  * Difficulties
 \* ---------------------------------------- */
 
-#square.hard {
+#square.hard,
+#square.impossible {
 	height: 100px;
 	width: 100px;
 }
 #square.impossible {
-	height: 100px;
-	width: 100px;
 	cursor: none;
 }
 

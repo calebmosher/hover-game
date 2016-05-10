@@ -16,7 +16,16 @@
 <div id="game">
 	<h1 class="menu">Click the square to begin.</h1>
 
-	<div id="square" class="start"></div>
+	<div class="square-container">
+		<div id="square" class="over standard"></div>
+	</div>
+
+	<div class="difficulties menu">
+		<div class="title">Difficulty</div>
+		<div class="difficulty standard active" data-difficulty="standard">Standard</div>
+		<div class="difficulty hard" data-difficulty="hard">Hard</div>
+		<div class="difficulty impossible" data-difficulty="impossible">Impossible</div>
+	</div>
 
 	<div class="timer"></div>
 </div>
