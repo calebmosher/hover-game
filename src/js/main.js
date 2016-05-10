@@ -1,7 +1,5 @@
 /**
  * Birst Game
- *
- * Stuff.
  */
 
 var STATE = {
@@ -17,6 +15,8 @@ var Game = {
 	loopInterval: null,
 	startTime: null,
 	currentScore: 0,
+	previousTop: 0,
+	previousLeft: 0,
 
 	start: function() {
 		this.startTime = new Date();
@@ -26,7 +26,7 @@ var Game = {
 			}
 
 			this.play();
-		}.bind(this), 50);
+		}.bind(this), 100);
 	},
 
 	changeState: function(newState) {
@@ -43,7 +43,6 @@ var Game = {
 	},
 
 	setupStateOver: function() {
-		console.log(this.loopInterval);
 		window.clearInterval(this.loopInterval);
 
 		this.$square
@@ -54,6 +53,8 @@ var Game = {
 		this.$menu.fadeIn(60);
 
 		this.currentScore = 0;
+		this.previousTop = 0;
+		this.previousLeft = 0;
 	},
 
 	setupStatePlaying: function() {
@@ -77,7 +78,32 @@ var Game = {
 	},
 
 	updateSquarePosition: function() {
+		var currentTop = parseInt(this.$square.css("top")),
+			currentLeft = parseInt(this.$square.css("left")),
+			topDirection = currentTop - this.previousTop > 0 ? 1 : -1,
+			leftDirection = currentLeft - this.previousLeft > 0 ? 1 : -1,
+			topUpperBound = $(window).height() - this.$square.height(),
+			leftUpperBound = $(window).width() - this.$square.width(),
+			newTop,
+			newLeft;
 
+		newTop = currentTop + (topDirection * Math.ceil(Math.random() * 4) * 6);
+		newLeft = currentLeft + (leftDirection * Math.ceil(Math.random() * 4) * 6);
+
+		if (newTop > topUpperBound || newTop < 0) {
+			newTop = currentTop + ((newTop - currentTop) * -1);
+		}
+		if (newLeft > leftUpperBound || newLeft < 0) {
+			newLeft = currentLeft + ((newLeft - currentLeft) * -1);
+		}
+
+		this.$square.animate({
+			top: newTop,
+			left: newLeft
+		}, 90);
+
+		this.previousTop = currentTop;
+		this.previousLeft = currentLeft;
 	},
 
 	updateClock: function() {
@@ -88,7 +114,7 @@ var Game = {
 
 		this.$timer.html(elapsedSeconds);
 		this.currentScore = elapsedSeconds;
-	},
+	}
 
 };
 
