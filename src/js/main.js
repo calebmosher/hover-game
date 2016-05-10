@@ -13,6 +13,8 @@ var Game = {
 	$square: $("#square"),
 	$menu: $(".menu"),
 	$timer: $(".timer"),
+	$win: $(".win"),
+	$lose: $(".lose"),
 	loopInterval: null,
 	startTime: null,
 	currentScore: 0,
@@ -50,7 +52,7 @@ var Game = {
 	setupStateOver: function() {
 		window.clearInterval(this.loopInterval);
 
-		this.$menu.fadeIn(60);
+		this.$menu.fadeIn(75);
 		this.$square
 			.css({
 				top: "",
@@ -77,7 +79,7 @@ var Game = {
 			.removeClass("over")
 			.addClass("playing")
 			.off("click")
-			.mouseout(this.changeState.bind(this, STATE.OVER))
+			.mouseout(this.lose.bind(this))
 		this.$menu.fadeOut(150);
 
 		this.start();
@@ -86,15 +88,29 @@ var Game = {
 	changeLevel: function(newLevel) {
 		this.level = newLevel ? newLevel : ++this.level;
 
+		if (this.level > 5) {
+			this.win();
+			return;
+		}
+
 		this.$body.removeClass();
 		this.$body.addClass("level-" + this.level);
-
 		this.hasJustUpdatedLevel = true;
 	},
 
 	play: function() {
 		this.updateSquarePosition();
 		this.updateClock();
+	},
+
+	win: function() {
+		this.$win.fadeIn(75).delay(2000).fadeOut(150);
+		this.changeState(STATE.OVER);
+	},
+
+	lose: function() {
+		this.$lose.fadeIn(75).delay(1000).fadeOut(150);
+		this.changeState(STATE.OVER);
 	},
 
 	updateSquarePosition: function() {
@@ -137,7 +153,7 @@ var Game = {
 		this.$timer.html(elapsedSeconds);
 		this.currentScore = elapsedSeconds;
 
-		switch (elapsedSeconds % 10) {
+		switch (elapsedSeconds % 2) {
 			case 0:
 				if (this.hasJustUpdatedLevel) {
 					break;
