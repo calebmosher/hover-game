@@ -52,6 +52,10 @@ var Game = {
 
 		this.$menu.fadeIn(60);
 		this.$square
+			.css({
+				top: "",
+				left: ""
+			})
 			.removeClass("playing")
 			.addClass("over")
 			.off("mouseout")
@@ -74,7 +78,7 @@ var Game = {
 			.addClass("playing")
 			.off("click")
 			.mouseout(this.changeState.bind(this, STATE.OVER))
-		this.$menu.fadeOut(120);
+		this.$menu.fadeOut(150);
 
 		this.start();
 	},
@@ -133,7 +137,7 @@ var Game = {
 		this.$timer.html(elapsedSeconds);
 		this.currentScore = elapsedSeconds;
 
-		switch (elapsedSeconds % 2) {
+		switch (elapsedSeconds % 10) {
 			case 0:
 				if (this.hasJustUpdatedLevel) {
 					break;
@@ -156,7 +160,7 @@ var Menu = {
 			$allDifficultyButtons.filter(e.target).addClass("active");
 
 			Game.$square
-				.removeClass("hard impossible")
+				.removeClass("standard hard impossible")
 				.addClass(e.target.dataset.difficulty);
 		});
 	}

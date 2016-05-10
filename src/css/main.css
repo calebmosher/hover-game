@@ -29,22 +29,81 @@ h1 {
 	font-size: 32px;
 }
 
-.square-container,
-#square {
+.square-container {
 	height: 200px;
 	width: 200px;
+	margin: 0 auto 100px;
+}
+#square {
 	margin: 0 auto;
 	z-index: 10;
 }
-.square-container {
-	margin-bottom: 100px;
-}
 #square.over {
-	position: static;
+	position: relative;
 	cursor: pointer;
+	transition:
+		height 300ms linear,
+		width 300ms linear,
+		top 300ms linear;
 }
 #square.playing {
 	position: absolute;
+}
+.arrow-container {
+	height: 0;
+	position: relative;
+}
+.arrow-container .arrow {
+	position: absolute;
+	top: 100px;
+	margin-top: -30px;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+}
+.arrow-container .arrow-left {
+	left: -60px;
+	border-left: 30px solid #fff;
+	border-top: 30px solid transparent;
+	border-bottom: 30px solid transparent;
+	animation-name: bounce-left;
+}
+.arrow-container .arrow-left-counter {
+	left: -60px;
+	border-left: 20px solid #080b1c;
+	border-top: 30px solid transparent;
+	border-bottom: 30px solid transparent;
+	animation-name: bounce-left;
+}
+@keyframes bounce-left {
+	from {
+		left: -60px;
+	}
+	to {
+		left: -90px;
+	}
+}
+.arrow-container .arrow-right {
+	right: -60px;
+	border-right: 30px solid #fff;
+	border-top: 30px solid transparent;
+	border-bottom: 30px solid transparent;
+	animation-name: bounce-right;
+}
+.arrow-container .arrow-right-counter {
+	right: -60px;
+	border-right: 20px solid #080b1c;
+	border-top: 30px solid transparent;
+	border-bottom: 30px solid transparent;
+	animation-name: bounce-right;
+}
+@keyframes bounce-right {
+	from {
+		right: -60px;
+	}
+	to {
+		right: -90px;
+	}
 }
 
 .difficulties {
@@ -98,8 +157,8 @@ h1 {
 
 .timer {
 	position: absolute;
-	top: 60px;
-	right: 60px;
+	top: 30px;
+	right: 30px;
 	color: #fff;
 	font-size: 30px;
 	z-index: 9;
@@ -111,10 +170,16 @@ h1 {
  * Difficulties
 \* ---------------------------------------- */
 
+#square.standard {
+	height: 200px;
+	width: 200px;
+	top: 0;
+}
 #square.hard,
 #square.impossible {
 	height: 100px;
 	width: 100px;
+	top: 50px;
 }
 #square.impossible {
 	cursor: none;
