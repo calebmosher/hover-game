@@ -15,8 +15,10 @@ var Game = {
 	loopInterval: null,
 	startTime: null,
 	currentScore: 0,
-	previousTop: 0,
-	previousLeft: 0,
+	currentAngle: {
+		top: 1,
+		left: 1,
+	},
 
 	start: function() {
 		this.startTime = new Date();
@@ -26,7 +28,7 @@ var Game = {
 			}
 
 			this.play();
-		}.bind(this), 100);
+		}.bind(this), 15);
 	},
 
 	changeState: function(newState) {
@@ -80,30 +82,32 @@ var Game = {
 	updateSquarePosition: function() {
 		var currentTop = parseInt(this.$square.css("top")),
 			currentLeft = parseInt(this.$square.css("left")),
-			topDirection = currentTop - this.previousTop > 0 ? 1 : -1,
-			leftDirection = currentLeft - this.previousLeft > 0 ? 1 : -1,
-			topUpperBound = $(window).height() - this.$square.height(),
-			leftUpperBound = $(window).width() - this.$square.width(),
 			newTop,
 			newLeft;
 
-		newTop = currentTop + (topDirection * Math.ceil(Math.random() * 4) * 6);
-		newLeft = currentLeft + (leftDirection * Math.ceil(Math.random() * 4) * 6);
+		this.setAngle(currentTop, currentLeft);
 
-		if (newTop > topUpperBound || newTop < 0) {
-			newTop = currentTop + ((newTop - currentTop) * -1);
-		}
-		if (newLeft > leftUpperBound || newLeft < 0) {
-			newLeft = currentLeft + ((newLeft - currentLeft) * -1);
-		}
+		newTop = currentTop + this.currentAngle.top,
+		newLeft = currentLeft + this.currentAngle.left;
 
-		this.$square.animate({
+		this.$square.css({
 			top: newTop,
 			left: newLeft
-		}, 90);
+		});
+	},
 
-		this.previousTop = currentTop;
-		this.previousLeft = currentLeft;
+	setAngle: function(currentTop, currentLeft) {
+		var topUpperBound = $(window).height() - this.$square.height(),
+			leftUpperBound = $(window).width() - this.$square.width(),
+			newTopAngle = Math.ceil(Math.random() * 2),
+			newLeftAngle = Math.ceil(Math.random() * 2);
+
+		if (currentTop > topUpperBound || currentTop < 0) {
+			this.currentAngle.top = newTopAngle * Math.sign(this.currentAngle.top) * -1;
+		}
+		if (currentLeft > leftUpperBound || currentLeft < 0) {
+			this.currentAngle.left = newLeftAngle * Math.sign(this.currentAngle.left) * -1;
+		}
 	},
 
 	updateClock: function() {
