@@ -9,16 +9,19 @@ var STATE = {
 
 var Game = {
 	state: STATE.OVER,
+	$body: $("body"),
 	$square: $("#square"),
 	$menu: $(".menu"),
 	$timer: $(".timer"),
 	loopInterval: null,
 	startTime: null,
 	currentScore: 0,
+	currentLevel: 1,
 	currentAngle: {
 		top: 1,
 		left: 1,
 	},
+	hasJustUpdatedLevel: false,
 
 	start: function() {
 		this.startTime = new Date();
@@ -47,31 +50,42 @@ var Game = {
 	setupStateOver: function() {
 		window.clearInterval(this.loopInterval);
 
-		this.$square
-			.addClass("start")
-			.off("mouseout")
-			.click(this.changeState.bind(this, STATE.PLAYING))
-			.css({position: "static"});
 		this.$menu.fadeIn(60);
+		this.$square
+			.removeClass("playing")
+			.addClass("over")
+			.off("mouseout")
+			.click(this.changeState.bind(this, STATE.PLAYING));
+
+		this.changeLevel(1);
 
 		this.currentScore = 0;
-		this.previousTop = 0;
-		this.previousLeft = 0;
+		this.currentAngle.top = Math.random() < .5 ? -1 : 1;
+		this.currentAngle.left = Math.random() < .5 ? -1 : 1;
 	},
 
 	setupStatePlaying: function() {
 		this.$square
-			.removeClass("start")
-			.off("click")
-			.mouseout(this.changeState.bind(this, STATE.OVER))
 			.css({
-				position: "absolute",
 				top: this.$square.offset().top,
 				left: this.$square.offset().left
-			});
+			})
+			.removeClass("over")
+			.addClass("playing")
+			.off("click")
+			.mouseout(this.changeState.bind(this, STATE.OVER))
 		this.$menu.fadeOut(120);
 
 		this.start();
+	},
+
+	changeLevel: function(newLevel) {
+		this.level = newLevel ? newLevel : ++this.level;
+
+		this.$body.removeClass();
+		this.$body.addClass("level-" + this.level);
+
+		this.hasJustUpdatedLevel = true;
 	},
 
 	play: function() {
@@ -99,8 +113,8 @@ var Game = {
 	setAngle: function(currentTop, currentLeft) {
 		var topUpperBound = $(window).height() - this.$square.height(),
 			leftUpperBound = $(window).width() - this.$square.width(),
-			newTopAngle = Math.ceil(Math.random() * 2),
-			newLeftAngle = Math.ceil(Math.random() * 2);
+			newTopAngle = Math.ceil(Math.random() * 2) + this.level,
+			newLeftAngle = Math.ceil(Math.random() * 2) + this.level;
 
 		if (currentTop > topUpperBound || currentTop < 0) {
 			this.currentAngle.top = newTopAngle * Math.sign(this.currentAngle.top) * -1;
@@ -118,8 +132,19 @@ var Game = {
 
 		this.$timer.html(elapsedSeconds);
 		this.currentScore = elapsedSeconds;
-	}
 
+		switch (elapsedSeconds % 5) {
+			case 0:
+				if (this.hasJustUpdatedLevel) {
+					break;
+				}
+				this.changeLevel();
+				break;
+			case 1:
+				this.hasJustUpdatedLevel = false;
+				break;
+		}
+	}
 };
 
 Game.changeState(STATE.OVER);
